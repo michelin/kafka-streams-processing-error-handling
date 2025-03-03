@@ -1,0 +1,22 @@
+[
+  {
+    "topic": "delivery_booked_topic",
+    "key": "DEL001",
+    "value": {
+      "deliveryId": "DEL001",
+      "truckId": "TRK001",
+      "numberOfTires": 18,
+      "destination": "Bordeaux"
+    }
+  },
+  {
+    "topic": "delivery_booked_topic",
+    "key": "DEL002",
+    "value": {
+      "deliveryId": "DEL002",
+      "truckId": "TRK002",
+      "numberOfTires": 7,
+      "destination": "Paris"
+    }
+  }
+]
