@@ -50,10 +50,15 @@ Access the Kafka broker container:
 docker exec -it broker bash
 ```
 
-Produce records of type `<String, String>` to the topic `INPUT_TOPIC`. The records represent orders, with the order number as the key and a list of items (prefixed by the quantity) as the value.
+Produce records of type `<String, String>` to the topic `INPUT_TOPIC`. 
 
 ```bash
 kafka-console-producer --bootstrap-server localhost:9092 --topic INPUT_TOPIC --property parse.key=true --property key.separator=,
+```
+
+The records represent orders, with the order number as the key and a list of items (prefixed by the quantity) as the value.
+
+```bash
 > ORD1001, 2, MacBook Air, USB-C Hub
 > ORD1002, 3, Samsung Galaxy S24, Wireless Charger, Phone Case
 > ORD1003, 2, Sony WH-1000XM5 Headphones, Bluetooth Speaker
@@ -62,7 +67,6 @@ kafka-console-producer --bootstrap-server localhost:9092 --topic INPUT_TOPIC --p
 You can trigger processing exceptions by producing a record with an incorrect format:
 
 ```bash
-kafka-console-producer --bootstrap-server localhost:9092 --topic INPUT_TOPIC --property parse.key=true --property key.separator=,
 > ORD1001, MacBook Air, USB-C Hub # Missing quantity
 > ORD1002, 3 # Missing items
 ```
