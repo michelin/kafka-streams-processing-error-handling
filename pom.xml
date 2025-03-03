@@ -13,7 +13,7 @@
         <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
         <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <kafka-streams.version>3.9.0</kafka-streams.version>
-        <logback.version>1.5.16</logback.version>
+        <logback.version>1.5.17</logback.version>
         <maven.checkstyle.plugin>3.6.0</maven.checkstyle.plugin>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
