@@ -99,7 +99,6 @@
                             <sortProperties>true</sortProperties>
                             <sortModules>true</sortModules>
                             <endWithNewline />
-                            <sortExecutions>true</sortExecutions>
                         </sortPom>
                     </pom>
                 </configuration>
