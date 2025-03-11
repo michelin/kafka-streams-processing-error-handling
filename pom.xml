@@ -9,16 +9,16 @@
     <version>1.0.0</version>
 
     <properties>
-        <checkstyle.version>10.21.4</checkstyle.version>
         <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
         <junit-jupiter.version>5.12.0</junit-jupiter.version>
         <kafka-streams.version>3.9.0</kafka-streams.version>
         <logback.version>1.5.17</logback.version>
-        <maven.checkstyle.plugin>3.6.0</maven.checkstyle.plugin>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+        <palantir.version>2.39.0</palantir.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j-api.version>2.0.17</slf4j-api.version>
+        <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -81,32 +81,32 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven.checkstyle.plugin}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>${checkstyle.version}</version>
-                    </dependency>
-                </dependencies>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-maven-plugin.version}</version>
                 <configuration>
-                    <configLocation>.checkstyle/checkstyle.xml</configLocation>
-                    <violationSeverity>info</violationSeverity>
-                    <consoleOutput>true</consoleOutput>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <sourceDirectories>
-                        <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
-                    </sourceDirectories>
-                    <testSourceDirectories>
-                        <testSourceDirectory>${project.build.testSourceDirectory}</testSourceDirectory>
-                    </testSourceDirectories>
+                    <java>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                        <palantirJavaFormat>
+                            <version>${palantir.version}</version>
+                            <style>PALANTIR</style>
+                            <formatJavadoc>true</formatJavadoc>
+                        </palantirJavaFormat>
+                        <removeUnusedImports />
+                        <formatAnnotations />
+                        <importOrder />
+                        <trimTrailingWhitespace />
+                        <endWithNewline />
+                        <licenseHeader>
+                            <file>.spotless/HEADER</file>
+                        </licenseHeader>
+                    </java>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>check-style</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>

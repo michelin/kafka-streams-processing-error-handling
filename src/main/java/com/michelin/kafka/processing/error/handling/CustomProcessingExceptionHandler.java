@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.kafka.processing.error.handling;
 
 import java.util.Map;
@@ -26,24 +25,21 @@ import org.apache.kafka.streams.processor.api.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Custom processing exception handler that logs the exception and decides whether to continue processing or fail.
- */
+/** Custom processing exception handler that logs the exception and decides whether to continue processing or fail. */
 public class CustomProcessingExceptionHandler implements ProcessingExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(CustomProcessingExceptionHandler.class);
 
     @Override
     public ProcessingHandlerResponse handle(ErrorHandlerContext context, Record<?, ?> record, Exception exception) {
         log.warn(
-            "Exception caught for processorNodeId = {}, topic = {}, partition = {}, offset = {}, key = {}, value = {}",
-            context.processorNodeId(),
-            context.topic(),
-            context.partition(),
-            context.offset(),
-            record != null ? record.key() : null,
-            record != null ? record.value() : null,
-            exception
-        );
+                "Exception caught for processorNodeId = {}, topic = {}, partition = {}, offset = {}, key = {}, value = {}",
+                context.processorNodeId(),
+                context.topic(),
+                context.partition(),
+                context.offset(),
+                record != null ? record.key() : null,
+                record != null ? record.value() : null,
+                exception);
 
         return isContinuableException(exception) ? ProcessingHandlerResponse.CONTINUE : ProcessingHandlerResponse.FAIL;
     }
@@ -55,8 +51,8 @@ public class CustomProcessingExceptionHandler implements ProcessingExceptionHand
 
     private boolean isContinuableException(Exception exception) {
         return exception instanceof NumberFormatException
-            || exception instanceof NullPointerException
-            || exception instanceof IndexOutOfBoundsException
-            || exception instanceof KaboomException;
+                || exception instanceof NullPointerException
+                || exception instanceof IndexOutOfBoundsException
+                || exception instanceof KaboomException;
     }
 }

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package com.michelin.kafka.processing.error.handling;
 
 import static org.apache.kafka.common.utils.Utils.mkEntry;
@@ -52,9 +51,7 @@ class KafkaStreamsAppTest {
         properties.setProperty(APPLICATION_ID_CONFIG, "error-handling-app-test");
         properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "dummy:1234");
         properties.setProperty(
-            PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG,
-            CustomProcessingExceptionHandler.class.getName()
-        );
+                PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG, CustomProcessingExceptionHandler.class.getName());
 
         StreamsBuilder streamsBuilder = new StreamsBuilder();
         KafkaStreamsApp.buildTopology(streamsBuilder);
@@ -92,7 +89,9 @@ class KafkaStreamsAppTest {
         assertEquals(KeyValue.pair("ORD1006", "Bluetooth Speaker"), results.get(6));
 
         assertEquals(5.0, testDriver.metrics().get(droppedRecordsTotalMetric()).metricValue());
-        assertEquals(0.03333333333333333, testDriver.metrics().get(droppedRecordsRateMetric()).metricValue());
+        assertEquals(
+                0.03333333333333333,
+                testDriver.metrics().get(droppedRecordsRateMetric()).metricValue());
     }
 
     private MetricName droppedRecordsTotalMetric() {
@@ -105,11 +104,9 @@ class KafkaStreamsAppTest {
 
     private MetricName createMetric(String name, String description) {
         return new MetricName(
-            name, "stream-task-metrics", description,
-            mkMap(
-                mkEntry("thread-id", Thread.currentThread().getName()),
-                mkEntry("task-id", "0_0")
-            )
-        );
+                name,
+                "stream-task-metrics",
+                description,
+                mkMap(mkEntry("thread-id", Thread.currentThread().getName()), mkEntry("task-id", "0_0")));
     }
 }
