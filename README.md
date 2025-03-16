@@ -12,7 +12,7 @@
 
 Code sample for [KIP-1033](https://cwiki.apache.org/confluence/display/KAFKA/KIP-1033%3A+Add+Kafka+Streams+exception+handler+for+exceptions+occurring+during+processing).
 
-Demonstrates the use of the Kafka Streams configuration `processing.exception.handler` to handle processing exceptions.
+Available since Apache Kafka 3.9.0, this code sample demonstrates the use of the Kafka Streams configuration `processing.exception.handler` to handle processing exception.
 
 </div>
 
