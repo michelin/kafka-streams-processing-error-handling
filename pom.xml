@@ -10,7 +10,7 @@
         <jib-maven-plugin.version>3.4.5</jib-maven-plugin.version>
         <junit-jupiter.version>5.12.1</junit-jupiter.version>
         <kafka-streams.version>4.0.0</kafka-streams.version>
-        <logback.version>1.5.17</logback.version>
+        <logback.version>1.5.18</logback.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <palantir.version>2.58.0</palantir.version>
