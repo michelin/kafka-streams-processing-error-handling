@@ -123,7 +123,7 @@ class KafkaStreamsAppTest {
 
         assertEquals(3.0, testDriver.metrics().get(droppedRecordsTotalMetric()).metricValue());
         assertEquals(
-            0.03333333333333333,
+                0.03333333333333333,
                 testDriver.metrics().get(droppedRecordsRateMetric()).metricValue());
     }
 

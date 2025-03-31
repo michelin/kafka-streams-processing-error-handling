@@ -50,6 +50,8 @@ public class CustomProcessingExceptionHandler implements ProcessingExceptionHand
     }
 
     private boolean isContinuableException(Exception exception) {
-        return exception instanceof JsonSyntaxException || exception instanceof NullPointerException || exception instanceof KaboomException;
+        return exception instanceof JsonSyntaxException
+                || exception instanceof NullPointerException
+                || exception instanceof KaboomException;
     }
 }
