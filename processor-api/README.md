@@ -1,6 +1,6 @@
-# Processing Error Handling with Processor API
+# Handling Processing Errors in Kafka Streams Processor API
 
-This module demonstrates how the processing exception handler can be used to handle processing exceptions in Kafka Streams Processor API.
+This module demonstrates how to use the processing exception handler to manage processing errors in Kafka Streams Processor API.
 
 ## Run
 
@@ -24,11 +24,13 @@ This will start the following services in Docker:
 
 ## Try it
 
-From Control Center running on http://localhost:9021, you can produce `DeliveryBooked` events to the topic `delivery_booked_topic`.
+From Control Center running on http://localhost:9021, you can produce `DeliveryBooked` events to the `delivery_booked_topic` topic.
+
+### Example Record
 
 Key:
 
-```
+```json
 "DEL12345"
 ```
 
@@ -43,9 +45,9 @@ Value:
 }
 ```
 
-To trigger the processing exception handler, you can produce a record with an incorrect format:
+### Triggering an Exception
 
-Value with missing `numberOfTires`, triggering a `NullPointerException`:
+To trigger the processing exception handler, produce a record with missing `numberOfTires`, which will result in a `NullPointerException`:
 
 ```json
 {
