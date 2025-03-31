@@ -48,14 +48,27 @@ services:
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
 
+  init-kafka:
+    image: confluentinc/cp-kafka:7.7.0
+    hostname: init-kafka
+    container_name: init-kafka
+    networks:
+      - kafka-streams-processing-error-handling-network
+    depends_on:
+      - broker
+    entrypoint: ['/bin/bash', '-c']
+    command: |
+      'cub kafka-ready -b broker:29092 1 300 && \
+      kafka-topics --bootstrap-server broker:29092 --create --topic delivery_booked_topic'
+
   kafka-streams-processing-error-handling-papi:
-    image: michelin/kafka-streams-processing-error-handling:papi-1.0.0
+    image: michelin/kafka-streams-processing-error-handling:processor-api-1.0.0
     hostname: kafka-streams-processing-error-handling-papi
     container_name: kafka-streams-processing-error-handling-papi
     networks:
       - kafka-streams-processing-error-handling-network
     depends_on:
-      - broker
+      - init-kafka
     restart: unless-stopped
     environment:
       BOOTSTRAP_SERVERS: 'broker:29092'
