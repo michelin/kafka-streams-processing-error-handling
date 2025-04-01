@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src=".readme/kafka.png" alt="Apache Kafka"/>
+<img src=".readme/logo.png" alt="Apache Kafka"/>
 
 # Processing Error Handling
 
