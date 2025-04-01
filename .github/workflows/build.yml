@@ -54,7 +54,7 @@ jobs:
           report_paths: '**/target/surefire-reports/TEST-*.xml'
 
       - name: Docker
-        if: github.event.pull_request.head.repo.fork == false
+        if: github.ref == 'refs/heads/main'
         run: mvn -B -DskipTests package jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
