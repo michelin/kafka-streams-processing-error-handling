@@ -2,7 +2,15 @@
 
 This module demonstrates how to use the processing exception handler to manage processing errors in Kafka Streams DSL operations.
 
-## Run
+## Prerequisites
+
+To compile and run this demo, you’ll need:
+
+- Java 21
+- Maven
+- Docker
+
+## Running the Application
 
 To run the application manually:
 
@@ -22,9 +30,9 @@ This will start the following services in Docker:
 - 1 Control Center
 - 1 Kafka Streams Processing Exception Handler DSL
 
-## Try it
+## Try It Out
 
-From Control Center running at http://localhost:9021, you can produce `DeliveryBooked` events to the `delivery_booked_topic` topic.
+Using Control Center at http://localhost:9021, you can produce `DeliveryBooked` events to the `delivery_booked_topic` topic.
 
 ### Example Record
 
@@ -47,7 +55,7 @@ Value:
 
 ### Triggering an Exception
 
-To trigger the processing exception handler, produce a record with missing `numberOfTires`, which will result in a `NullPointerException`:
+To trigger the processing exception handler, produce a record with a missing `numberOfTires` field. This will result in a `NullPointerException`:
 
 ```json
 {
