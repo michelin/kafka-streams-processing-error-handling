@@ -25,6 +25,7 @@ import static org.apache.kafka.streams.StreamsConfig.BOOTSTRAP_SERVERS_CONFIG;
 import static org.apache.kafka.streams.StreamsConfig.PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.michelin.kafka.error.handling.papi.handler.ExceptionTypeProcessingHandler;
 import java.time.Duration;
 import java.util.List;
 import java.util.Properties;
@@ -46,12 +47,12 @@ class KafkaStreamsAppTest {
     private TestOutputTopic<String, String> outputTopic;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         Properties properties = new Properties();
         properties.setProperty(APPLICATION_ID_CONFIG, "processing-error-handling-papi-app");
         properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "dummy:1234");
         properties.setProperty(
-                PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG, CustomProcessingExceptionHandler.class.getName());
+                PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG, ExceptionTypeProcessingHandler.class.getName());
 
         StreamsBuilder streamsBuilder = new StreamsBuilder();
         KafkaStreamsApp.buildTopology(streamsBuilder);
@@ -69,51 +70,40 @@ class KafkaStreamsAppTest {
     }
 
     @Test
-    void shouldHandleExceptionsAndContinueProcessing() {
+    void shouldContinueOnInvalidDeliveryAndNullPointerExceptions() {
         inputTopic.pipeInput(
-                "DEL12345",
-                """
-            {
-              "deliveryId": "DEL12345",
-              "truckId": "TRK56789",
-              "numberOfTires": 18,
-              "destination": "Bordeaux"
-            }
-            """);
+            "DEL12345",
+            """
+        {
+          "deliveryId": "DEL12345",
+          "truckId": "TRK56789",
+          "numberOfTires": 18,
+          "destination": "Bordeaux"
+        }
+        """);
+
+        // "numberOfTires" is negative. This will throw an InvalidDeliveryException
+        inputTopic.pipeInput(
+            "DEL73148",
+            """
+        {
+          "deliveryId": "DEL67145",
+          "truckId": "TRK34567",
+          "numberOfTires": -1,
+          "destination": "Marseille"
+        }
+        """);
 
         // "numberOfTires" is missing. This will throw a NullPointerException
         inputTopic.pipeInput(
-                "DEL73148",
-                """
-            {
-              "deliveryId": "DEL73148",
-              "truckId": "TRK48612",
-              "destination": "Lyon"
-            }
-            """);
-
-        inputTopic.pipeInput(
-                "DEL67891",
-                """
-            {
-              "deliveryId": "DEL67891",
-              "truckId": "TRK12345",
-              "numberOfTires": 7,
-              "destination": "Paris"
-            }
-            """);
-
-        // Json syntax error. This will throw a JsonSyntaxException
-        inputTopic.pipeInput(
-                "DEL67891",
-                """
-            {
-              "deliveryId": ,
-              "truckId": "TRK12345",
-              "numberOfTires": 7,
-              "destination": "Paris"
-            }
-            """);
+            "DEL73148",
+            """
+        {
+          "deliveryId": "DEL73148",
+          "truckId": "TRK48612",
+          "destination": "Lyon"
+        }
+        """);
 
         testDriver.advanceWallClockTime(Duration.ofMinutes(2)); // KaboomException
 
@@ -123,8 +113,8 @@ class KafkaStreamsAppTest {
 
         assertEquals(3.0, testDriver.metrics().get(droppedRecordsTotalMetric()).metricValue());
         assertEquals(
-                0.03333333333333333,
-                testDriver.metrics().get(droppedRecordsRateMetric()).metricValue());
+            0.03333333333333333,
+            testDriver.metrics().get(droppedRecordsRateMetric()).metricValue());
     }
 
     private MetricName droppedRecordsTotalMetric() {

@@ -23,11 +23,13 @@ import static org.apache.kafka.streams.StreamsConfig.BOOTSTRAP_SERVERS_CONFIG;
 import static org.apache.kafka.streams.StreamsConfig.PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG;
 
 import com.google.gson.Gson;
+import com.michelin.kafka.error.handling.dsl.handler.ExceptionTypeProcessingHandler;
 import java.util.Optional;
 import java.util.Properties;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.errors.StreamsUncaughtExceptionHandler;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Produced;
 
@@ -40,13 +42,13 @@ public class KafkaStreamsApp {
         properties.put(
                 BOOTSTRAP_SERVERS_CONFIG,
                 Optional.ofNullable(System.getenv("BOOTSTRAP_SERVERS")).orElse("localhost:9092"));
-        properties.put(PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG, CustomProcessingExceptionHandler.class.getName());
+        properties.put(PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG, ExceptionTypeProcessingHandler.class.getName());
 
         StreamsBuilder streamsBuilder = new StreamsBuilder();
         buildTopology(streamsBuilder);
 
         KafkaStreams kafkaStreams = new KafkaStreams(streamsBuilder.build(), properties);
-
+        kafkaStreams.setUncaughtExceptionHandler(exception -> StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
         Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
 
         kafkaStreams.start();
@@ -55,7 +57,13 @@ public class KafkaStreamsApp {
     public static void buildTopology(StreamsBuilder streamsBuilder) {
         streamsBuilder.stream("delivery_booked_topic", Consumed.with(Serdes.String(), Serdes.String()))
                 .mapValues(KafkaStreamsApp::parseFromJson) // JsonSyntaxException
-                .filter((key, value) -> value.getNumberOfTires() >= 10) // NullPointerException
+                .filter((key, value) -> {
+                    if (value.getNumberOfTires() < 0) {
+                        throw new InvalidDeliveryException("Number of tires cannot be negative");
+                    }
+
+                    return value.getNumberOfTires() >= 10;
+                }) // InvalidDeliveryException or NullPointerException
                 .mapValues(KafkaStreamsApp::parseToJson)
                 .to("filtered_delivery_booked_dsl_topic", Produced.with(Serdes.String(), Serdes.String()));
     }

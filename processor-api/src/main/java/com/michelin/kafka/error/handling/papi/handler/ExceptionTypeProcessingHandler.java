@@ -16,40 +16,46 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.michelin.kafka.error.handling.dsl;
+package com.michelin.kafka.error.handling.papi.handler;
 
 import com.google.gson.JsonSyntaxException;
+import com.michelin.kafka.error.handling.papi.InvalidDeliveryException;
+import com.michelin.kafka.error.handling.papi.KaboomException;
 import java.util.Map;
+import org.apache.kafka.common.errors.NetworkException;
 import org.apache.kafka.streams.errors.ErrorHandlerContext;
 import org.apache.kafka.streams.errors.ProcessingExceptionHandler;
 import org.apache.kafka.streams.processor.api.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CustomProcessingExceptionHandler implements ProcessingExceptionHandler {
-    private static final Logger log = LoggerFactory.getLogger(CustomProcessingExceptionHandler.class);
+public class ExceptionTypeProcessingHandler implements ProcessingExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(ExceptionTypeProcessingHandler.class);
 
     @Override
     public ProcessingHandlerResponse handle(ErrorHandlerContext context, Record<?, ?> record, Exception exception) {
         log.warn(
-                "Exception caught for processorNodeId = {}, topic = {}, partition = {}, offset = {}, key = {}, value = {}",
-                context.processorNodeId(),
-                context.topic(),
-                context.partition(),
-                context.offset(),
-                record != null ? record.key() : null,
-                record != null ? record.value() : null,
-                exception);
+            "Exception caught for processorNodeId = {}, topic = {}, partition = {}, offset = {}, key = {}, value = {}",
+            context.processorNodeId(),
+            context.topic(),
+            context.partition(),
+            context.offset(),
+            record != null ? record.key() : null,
+            record != null ? record.value() : null,
+            exception);
 
-        return isContinuableException(exception) ? ProcessingHandlerResponse.CONTINUE : ProcessingHandlerResponse.FAIL;
+        if (exception instanceof JsonSyntaxException)
+            return ProcessingHandlerResponse.FAIL;
+        if (exception instanceof InvalidDeliveryException)
+            return ProcessingHandlerResponse.CONTINUE;
+        if (exception instanceof NetworkException)
+            return ProcessingHandlerResponse.FAIL;
+
+        return ProcessingHandlerResponse.CONTINUE;
     }
 
     @Override
     public void configure(Map<String, ?> map) {
         // Do nothing
-    }
-
-    private boolean isContinuableException(Exception exception) {
-        return exception instanceof JsonSyntaxException || exception instanceof NullPointerException;
     }
 }
