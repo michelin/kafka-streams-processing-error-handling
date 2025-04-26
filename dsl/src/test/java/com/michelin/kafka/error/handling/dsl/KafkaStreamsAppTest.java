@@ -71,8 +71,8 @@ class KafkaStreamsAppTest {
     @Test
     void shouldContinueOnInvalidDeliveryAndNullPointerExceptions() {
         inputTopic.pipeInput(
-            "DEL12345",
-            """
+                "DEL12345",
+                """
         {
           "deliveryId": "DEL12345",
           "truckId": "TRK56789",
@@ -83,8 +83,8 @@ class KafkaStreamsAppTest {
 
         // "numberOfTires" is negative. This will throw an InvalidDeliveryException
         inputTopic.pipeInput(
-            "DEL73148",
-            """
+                "DEL73148",
+                """
         {
           "deliveryId": "DEL67145",
           "truckId": "TRK34567",
@@ -95,8 +95,8 @@ class KafkaStreamsAppTest {
 
         // "numberOfTires" is missing. This will throw a NullPointerException
         inputTopic.pipeInput(
-            "DEL73148",
-            """
+                "DEL73148",
+                """
         {
           "deliveryId": "DEL73148",
           "truckId": "TRK48612",
@@ -104,15 +104,14 @@ class KafkaStreamsAppTest {
         }
         """);
 
-
         List<KeyValue<String, String>> results = outputTopic.readKeyValuesToList();
 
         assertEquals("DEL12345", results.getFirst().key);
 
         assertEquals(2.0, testDriver.metrics().get(droppedRecordsTotalMetric()).metricValue());
         assertEquals(
-            0.06666666666666667,
-            testDriver.metrics().get(droppedRecordsRateMetric()).metricValue());
+                0.06666666666666667,
+                testDriver.metrics().get(droppedRecordsRateMetric()).metricValue());
     }
 
     private MetricName droppedRecordsTotalMetric() {

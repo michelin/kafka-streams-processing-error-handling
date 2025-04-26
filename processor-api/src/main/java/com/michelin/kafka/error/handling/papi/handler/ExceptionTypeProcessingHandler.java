@@ -20,7 +20,6 @@ package com.michelin.kafka.error.handling.papi.handler;
 
 import com.google.gson.JsonSyntaxException;
 import com.michelin.kafka.error.handling.papi.InvalidDeliveryException;
-import com.michelin.kafka.error.handling.papi.KaboomException;
 import java.util.Map;
 import org.apache.kafka.common.errors.NetworkException;
 import org.apache.kafka.streams.errors.ErrorHandlerContext;
@@ -35,21 +34,18 @@ public class ExceptionTypeProcessingHandler implements ProcessingExceptionHandle
     @Override
     public ProcessingHandlerResponse handle(ErrorHandlerContext context, Record<?, ?> record, Exception exception) {
         log.warn(
-            "Exception caught for processorNodeId = {}, topic = {}, partition = {}, offset = {}, key = {}, value = {}",
-            context.processorNodeId(),
-            context.topic(),
-            context.partition(),
-            context.offset(),
-            record != null ? record.key() : null,
-            record != null ? record.value() : null,
-            exception);
+                "Exception caught for processorNodeId = {}, topic = {}, partition = {}, offset = {}, key = {}, value = {}",
+                context.processorNodeId(),
+                context.topic(),
+                context.partition(),
+                context.offset(),
+                record != null ? record.key() : null,
+                record != null ? record.value() : null,
+                exception);
 
-        if (exception instanceof JsonSyntaxException)
-            return ProcessingHandlerResponse.FAIL;
-        if (exception instanceof InvalidDeliveryException)
-            return ProcessingHandlerResponse.CONTINUE;
-        if (exception instanceof NetworkException)
-            return ProcessingHandlerResponse.FAIL;
+        if (exception instanceof JsonSyntaxException) return ProcessingHandlerResponse.FAIL;
+        if (exception instanceof InvalidDeliveryException) return ProcessingHandlerResponse.CONTINUE;
+        if (exception instanceof NetworkException) return ProcessingHandlerResponse.FAIL;
 
         return ProcessingHandlerResponse.CONTINUE;
     }

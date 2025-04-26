@@ -43,12 +43,9 @@ public class ExceptionTypeProcessingHandler implements ProcessingExceptionHandle
                 record != null ? record.value() : null,
                 exception);
 
-        if (exception instanceof JsonSyntaxException)
-            return ProcessingHandlerResponse.FAIL;
-        if (exception instanceof InvalidDeliveryException)
-            return ProcessingHandlerResponse.CONTINUE;
-        if (exception instanceof NetworkException)
-            return ProcessingHandlerResponse.FAIL;
+        if (exception instanceof JsonSyntaxException) return ProcessingHandlerResponse.FAIL;
+        if (exception instanceof InvalidDeliveryException) return ProcessingHandlerResponse.CONTINUE;
+        if (exception instanceof NetworkException) return ProcessingHandlerResponse.FAIL;
 
         return ProcessingHandlerResponse.CONTINUE;
     }

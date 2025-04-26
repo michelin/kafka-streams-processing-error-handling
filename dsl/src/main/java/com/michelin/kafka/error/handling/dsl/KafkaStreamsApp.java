@@ -48,7 +48,8 @@ public class KafkaStreamsApp {
         buildTopology(streamsBuilder);
 
         KafkaStreams kafkaStreams = new KafkaStreams(streamsBuilder.build(), properties);
-        kafkaStreams.setUncaughtExceptionHandler(exception -> StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
+        kafkaStreams.setUncaughtExceptionHandler(
+                exception -> StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
         Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
 
         kafkaStreams.start();
