@@ -26,3 +26,7 @@ Available since Apache Kafka 3.9.0, this example showcases the use of the Kafka 
 
 - Processing Error Handling with [DSL](/dsl).
 - Processing Error Handling with [Processor API](/processor-api).
+
+## Current London 2025
+
+Processing Error Handling (KIP-1033) has been presented at [Current London 2025](https://current.confluent.io/london/agenda). Slides are available [here](.readme/Slides_Processing_Exception_Handling.pptx).
