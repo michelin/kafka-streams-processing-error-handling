@@ -23,7 +23,7 @@
         <palantir.version>2.58.0</palantir.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j-api.version>2.0.17</slf4j-api.version>
-        <spotless-maven-plugin.version>2.44.4</spotless-maven-plugin.version>
+        <spotless-maven-plugin.version>2.44.5</spotless-maven-plugin.version>
     </properties>
 
     <dependencies>
