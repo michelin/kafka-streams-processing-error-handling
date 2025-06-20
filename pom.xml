@@ -23,6 +23,9 @@
         <palantir.version>2.58.0</palantir.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j-api.version>2.0.17</slf4j-api.version>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>michelin</sonar.organization>
+        <sonar.projectKey>michelin_kafka-streams-processing-error-handling</sonar.projectKey>
         <spotless-maven-plugin.version>2.44.5</spotless-maven-plugin.version>
     </properties>
 
@@ -117,6 +120,20 @@
                             <endWithNewline />
                         </sortPom>
                     </pom>
+                    <yaml>
+                        <includes>
+                            <include>src/main/resources/*.yml</include>
+                            <include>src/test/resources/*.yml</include>
+                        </includes>
+                        <jackson>
+                            <features>
+                                <ORDER_MAP_ENTRIES_BY_KEYS>true</ORDER_MAP_ENTRIES_BY_KEYS>
+                            </features>
+                            <yamlFeatures>
+                                <WRITE_DOC_START_MARKER>false</WRITE_DOC_START_MARKER>
+                            </yamlFeatures>
+                        </jackson>
+                    </yaml>
                 </configuration>
                 <executions>
                     <execution>
