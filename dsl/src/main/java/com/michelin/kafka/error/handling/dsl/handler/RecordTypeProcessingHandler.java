@@ -44,7 +44,7 @@ public class RecordTypeProcessingHandler implements ProcessingExceptionHandler {
         }
 
         if (message != null && message.value() instanceof DeliveryBooked deliveryBooked) {
-            return deliveryBooked.getNumberOfTires() == null
+            return deliveryBooked.getNumberOfTires() == null || deliveryBooked.getNumberOfTires() < 0
                     ? ProcessingHandlerResponse.CONTINUE
                     : ProcessingHandlerResponse.FAIL;
         }

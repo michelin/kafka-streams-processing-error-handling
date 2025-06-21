@@ -26,8 +26,11 @@ import static org.apache.kafka.streams.StreamsConfig.PROCESSING_EXCEPTION_HANDLE
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.michelin.kafka.error.handling.dsl.handler.ExceptionTypeProcessingHandler;
+import com.michelin.kafka.error.handling.dsl.handler.ProcessorIdProcessingHandler;
+import com.michelin.kafka.error.handling.dsl.handler.RecordTypeProcessingHandler;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Stream;
 import org.apache.kafka.common.MetricName;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -37,39 +40,31 @@ import org.apache.kafka.streams.TestInputTopic;
 import org.apache.kafka.streams.TestOutputTopic;
 import org.apache.kafka.streams.TopologyTestDriver;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class KafkaStreamsAppTest {
     private TopologyTestDriver testDriver;
     private TestInputTopic<String, String> inputTopic;
     private TestOutputTopic<String, String> outputTopic;
 
-    @BeforeEach
-    void setUp() {
-        Properties properties = new Properties();
-        properties.setProperty(APPLICATION_ID_CONFIG, "processing-error-handling-dsl-app-test");
-        properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "dummy:1234");
-        properties.setProperty(
-                PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG, ExceptionTypeProcessingHandler.class.getName());
-
-        StreamsBuilder streamsBuilder = new StreamsBuilder();
-        KafkaStreamsApp.buildTopology(streamsBuilder);
-        testDriver = new TopologyTestDriver(streamsBuilder.build(), properties);
-
-        inputTopic =
-                testDriver.createInputTopic("delivery_booked_topic", new StringSerializer(), new StringSerializer());
-        outputTopic = testDriver.createOutputTopic(
-                "filtered_delivery_booked_dsl_topic", new StringDeserializer(), new StringDeserializer());
-    }
-
     @AfterEach
     void tearDown() {
         testDriver.close();
     }
 
-    @Test
-    void shouldContinueOnInvalidDeliveryAndNullPointerExceptions() {
+    static Stream<String> provideProcessingExceptionHandlerClassName() {
+        return Stream.of(
+                ExceptionTypeProcessingHandler.class.getName(),
+                ProcessorIdProcessingHandler.class.getName(),
+                RecordTypeProcessingHandler.class.getName());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideProcessingExceptionHandlerClassName")
+    void shouldContinueOnInvalidDeliveryAndNullPointerExceptions(String processingExceptionHandlerClassName) {
+        instantiateTopologyTestDriver(processingExceptionHandlerClassName);
+
         inputTopic.pipeInput(
                 "DEL12345",
                 """
@@ -112,6 +107,22 @@ class KafkaStreamsAppTest {
         assertEquals(
                 0.06666666666666667,
                 testDriver.metrics().get(droppedRecordsRateMetric()).metricValue());
+    }
+
+    void instantiateTopologyTestDriver(String processingExceptionHandlerClassName) {
+        Properties properties = new Properties();
+        properties.setProperty(APPLICATION_ID_CONFIG, "processing-error-handling-dsl-app-test");
+        properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, "dummy:1234");
+        properties.setProperty(PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG, processingExceptionHandlerClassName);
+
+        StreamsBuilder streamsBuilder = new StreamsBuilder();
+        KafkaStreamsApp.buildTopology(streamsBuilder);
+        testDriver = new TopologyTestDriver(streamsBuilder.build(), properties);
+
+        inputTopic =
+                testDriver.createInputTopic("delivery_booked_topic", new StringSerializer(), new StringSerializer());
+        outputTopic = testDriver.createOutputTopic(
+                "filtered_delivery_booked_dsl_topic", new StringDeserializer(), new StringDeserializer());
     }
 
     private MetricName droppedRecordsTotalMetric() {
