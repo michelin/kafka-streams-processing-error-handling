@@ -22,6 +22,7 @@ import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG;
 import static org.apache.kafka.streams.StreamsConfig.BOOTSTRAP_SERVERS_CONFIG;
 import static org.apache.kafka.streams.StreamsConfig.PROCESSING_EXCEPTION_HANDLER_CLASS_CONFIG;
 
+import com.google.gson.Gson;
 import com.michelin.kafka.error.handling.papi.handler.ExceptionTypeProcessingHandler;
 import java.util.Optional;
 import java.util.Properties;
@@ -34,6 +35,8 @@ import org.apache.kafka.streams.kstream.Produced;
 
 /** Kafka Streams application. */
 public class KafkaStreamsApp {
+    private static final Gson gson = new Gson();
+
     public static void main(String[] args) {
         Properties properties = new Properties();
         properties.put(APPLICATION_ID_CONFIG, "processing-error-handling-papi-app");
@@ -56,7 +59,12 @@ public class KafkaStreamsApp {
 
     public static void buildTopology(StreamsBuilder streamsBuilder) {
         streamsBuilder.stream("delivery_booked_topic", Consumed.with(Serdes.String(), Serdes.String()))
+                .mapValues(KafkaStreamsApp::parseFromJson)
                 .process(CustomProcessor::new)
                 .to("filtered_delivery_booked_papi_topic", Produced.with(Serdes.String(), Serdes.String()));
+    }
+
+    private static DeliveryBooked parseFromJson(String value) {
+        return gson.fromJson(value, DeliveryBooked.class);
     }
 }

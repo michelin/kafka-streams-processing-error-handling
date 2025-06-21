@@ -44,7 +44,7 @@ import org.apache.kafka.streams.processor.api.ContextualProcessor;
 import org.apache.kafka.streams.processor.api.ProcessorContext;
 import org.apache.kafka.streams.processor.api.Record;
 
-public class CustomProcessor extends ContextualProcessor<String, String, String, String> {
+public class CustomProcessor extends ContextualProcessor<String, DeliveryBooked, String, String> {
     private static final Gson gson = new Gson();
 
     @Override
@@ -57,20 +57,14 @@ public class CustomProcessor extends ContextualProcessor<String, String, String,
     }
 
     @Override
-    public void process(Record<String, String> message) {
-        DeliveryBooked value = parseFromJson(message.value());
-
-        if (value.getNumberOfTires() < 0) {
+    public void process(Record<String, DeliveryBooked> message) {
+        if (message.value().getNumberOfTires() < 0) {
             throw new InvalidDeliveryException("Number of tires cannot be negative");
         }
 
-        if (value.getNumberOfTires() >= 10) {
-            context().forward(message.withValue(parseToJson(value)));
+        if (message.value().getNumberOfTires() >= 10) {
+            context().forward(message.withValue(parseToJson(message.value())));
         }
-    }
-
-    private static DeliveryBooked parseFromJson(String value) {
-        return gson.fromJson(value, DeliveryBooked.class);
     }
 
     private static String parseToJson(DeliveryBooked value) {
