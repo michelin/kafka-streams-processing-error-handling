@@ -16,7 +16,7 @@
         <gson.version>2.13.1</gson.version>
         <jacoco.version>0.8.13</jacoco.version>
         <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
-        <junit-jupiter.version>5.13.3</junit-jupiter.version>
+        <junit-jupiter.version>5.13.4</junit-jupiter.version>
         <kafka-streams.version>4.0.0</kafka-streams.version>
         <logback.version>1.5.18</logback.version>
         <maven.compiler.source>21</maven.compiler.source>
