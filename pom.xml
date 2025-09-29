@@ -151,6 +151,16 @@
                 <configuration>
                     <from>
                         <image>eclipse-temurin:21-jre-alpine</image>
+                        <platforms>
+                            <platform>
+                                <architecture>amd64</architecture>
+                                <os>linux</os>
+                            </platform>
+                            <platform>
+                                <architecture>arm64</architecture>
+                                <os>linux</os>
+                            </platform>
+                        </platforms>
                     </from>
                     <to>
                         <image>docker.io/michelin/kafka-streams-processing-error-handling:${project.artifactId}-${project.version}</image>
