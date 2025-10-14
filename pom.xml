@@ -14,7 +14,7 @@
 
     <properties>
         <gson.version>2.13.2</gson.version>
-        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
         <junit-jupiter.version>6.0.0</junit-jupiter.version>
         <kafka-streams.version>4.1.0</kafka-streams.version>
