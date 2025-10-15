@@ -18,7 +18,7 @@ Available since Apache Kafka 3.9.0, this example showcases the use of the Kafka 
 
 ## Prerequisites
 
-- Java 21
+- Java 25
 - Maven
 - Docker
 

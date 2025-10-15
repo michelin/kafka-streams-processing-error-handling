@@ -6,7 +6,7 @@ This module demonstrates how to use the processing exception handler to manage p
 
 To compile and run this demo, you’ll need:
 
-- Java 21
+- Java 25
 - Maven
 - Docker
 
