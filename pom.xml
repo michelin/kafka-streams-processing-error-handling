@@ -19,9 +19,9 @@
         <junit-jupiter.version>6.0.0</junit-jupiter.version>
         <kafka-streams.version>4.1.0</kafka-streams.version>
         <logback.version>1.5.19</logback.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <palantir.version>2.58.0</palantir.version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <palantir.version>2.80.0</palantir.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j-api.version>2.0.17</slf4j-api.version>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -150,7 +150,7 @@
                 <version>${jib-maven-plugin.version}</version>
                 <configuration>
                     <from>
-                        <image>eclipse-temurin:21-jre-alpine</image>
+                        <image>eclipse-temurin:25-jre-alpine</image>
                         <platforms>
                             <platform>
                                 <architecture>amd64</architecture>
