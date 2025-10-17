@@ -65,7 +65,9 @@ class KafkaStreamsAppTest {
     void shouldContinueOnInvalidDeliveryAndNullPointerExceptions(String processingExceptionHandlerClassName) {
         instantiateTopologyTestDriver(processingExceptionHandlerClassName);
 
-        inputTopic.pipeInput("DEL12345", """
+        inputTopic.pipeInput(
+                "DEL12345",
+                """
         {
           "deliveryId": "DEL12345",
           "truckId": "TRK56789",
@@ -75,7 +77,9 @@ class KafkaStreamsAppTest {
         """);
 
         // "numberOfTires" is negative. This will throw an InvalidDeliveryException
-        inputTopic.pipeInput("DEL73148", """
+        inputTopic.pipeInput(
+                "DEL73148",
+                """
         {
           "deliveryId": "DEL67145",
           "truckId": "TRK34567",
@@ -85,7 +89,9 @@ class KafkaStreamsAppTest {
         """);
 
         // "numberOfTires" is missing. This will throw a NullPointerException
-        inputTopic.pipeInput("DEL73148", """
+        inputTopic.pipeInput(
+                "DEL73148",
+                """
         {
           "deliveryId": "DEL73148",
           "truckId": "TRK48612",
