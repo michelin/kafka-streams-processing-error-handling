@@ -50,7 +50,7 @@ public class CustomProcessor extends ContextualProcessor<String, DeliveryBooked,
     @Override
     public void init(ProcessorContext<String, String> context) {
         super.init(context);
-        context.schedule(Duration.ofMinutes(1), PunctuationType.WALL_CLOCK_TIME, timestamp -> {
+        context.schedule(Duration.ofMinutes(1), PunctuationType.WALL_CLOCK_TIME, _ -> {
             // Simulate an intentional exception
             throw new KaboomException("Simulated exception in punctuation");
         });

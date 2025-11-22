@@ -47,19 +47,20 @@ public class KafkaStreamsApp {
         StreamsBuilder streamsBuilder = new StreamsBuilder();
         buildTopology(streamsBuilder);
 
-        try (KafkaStreams kafkaStreams = new KafkaStreams(streamsBuilder.build(), properties)) {
-            kafkaStreams.setUncaughtExceptionHandler(
-                    exception -> StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
-            Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
+        KafkaStreams kafkaStreams = new KafkaStreams(streamsBuilder.build(), properties);
 
-            kafkaStreams.start();
-        }
+        kafkaStreams.setUncaughtExceptionHandler(
+                _ -> StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
+
+        kafkaStreams.start();
     }
 
     public static void buildTopology(StreamsBuilder streamsBuilder) {
         streamsBuilder.stream("delivery_booked_topic", Consumed.with(Serdes.String(), Serdes.String()))
                 .mapValues(KafkaStreamsApp::parseFromJson) // JsonSyntaxException
-                .filter((key, value) -> {
+                .filter((_, value) -> {
                     if (value.getNumberOfTires() < 0) {
                         throw new InvalidDeliveryException("Number of tires cannot be negative");
                     }

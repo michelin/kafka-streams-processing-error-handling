@@ -48,13 +48,13 @@ public class KafkaStreamsApp {
         StreamsBuilder streamsBuilder = new StreamsBuilder();
         buildTopology(streamsBuilder);
 
-        try (KafkaStreams kafkaStreams = new KafkaStreams(streamsBuilder.build(), properties)) {
-            kafkaStreams.setUncaughtExceptionHandler(
-                    exception -> StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
-            Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
+        KafkaStreams kafkaStreams = new KafkaStreams(streamsBuilder.build(), properties);
 
-            kafkaStreams.start();
-        }
+        kafkaStreams.setUncaughtExceptionHandler(
+                _ -> StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT);
+        Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
+
+        kafkaStreams.start();
     }
 
     public static void buildTopology(StreamsBuilder streamsBuilder) {
