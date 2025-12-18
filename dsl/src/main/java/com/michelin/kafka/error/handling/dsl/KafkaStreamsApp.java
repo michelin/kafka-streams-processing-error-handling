@@ -36,7 +36,7 @@ import org.apache.kafka.streams.kstream.Produced;
 public class KafkaStreamsApp {
     private static final Gson gson = new Gson();
 
-    public static void main(String[] args) {
+    void main() {
         Properties properties = new Properties();
         properties.put(APPLICATION_ID_CONFIG, "processing-error-handling-dsl-app");
         properties.put(

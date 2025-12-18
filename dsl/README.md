@@ -26,9 +26,9 @@ docker-compose up -d
 
 This will start the following services in Docker:
 
-- 1 Kafka broker (KRaft mode)
-- 1 Control Center
-- 1 Kafka Streams Processing Exception Handler DSL
+- Kafka Broker
+- Control Center
+- Kafka Streams Processing Exception Handler DSL
 
 ## Try It Out
 
