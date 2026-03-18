@@ -17,7 +17,7 @@
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
         <junit-jupiter.version>6.0.3</junit-jupiter.version>
-        <kafka-streams.version>4.1.1</kafka-streams.version>
+        <kafka-streams.version>4.2.0</kafka-streams.version>
         <logback.version>1.5.32</logback.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
