@@ -30,7 +30,7 @@ public class RecordTypeProcessingHandler implements ProcessingExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(RecordTypeProcessingHandler.class);
 
     @Override
-    public ProcessingHandlerResponse handle(ErrorHandlerContext context, Record<?, ?> message, Exception exception) {
+    public Response handleError(ErrorHandlerContext context, Record<?, ?> message, Exception exception) {
         if (log.isWarnEnabled()) {
             log.warn(
                     "Exception caught for processorNodeId = {}, topic = {}, partition = {}, offset = {}, key = {}, value = {}",
@@ -45,11 +45,11 @@ public class RecordTypeProcessingHandler implements ProcessingExceptionHandler {
 
         if (message != null && message.value() instanceof DeliveryBooked deliveryBooked) {
             return deliveryBooked.numberOfTires() == null || deliveryBooked.numberOfTires() < 0
-                    ? ProcessingHandlerResponse.CONTINUE
-                    : ProcessingHandlerResponse.FAIL;
+                    ? Response.resume()
+                    : Response.fail();
         }
 
-        return ProcessingHandlerResponse.CONTINUE;
+        return Response.resume();
     }
 
     @Override

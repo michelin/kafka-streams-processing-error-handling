@@ -29,7 +29,7 @@ public class ProcessorIdProcessingHandler implements ProcessingExceptionHandler 
     private static final Logger log = LoggerFactory.getLogger(ProcessorIdProcessingHandler.class);
 
     @Override
-    public ProcessingHandlerResponse handle(ErrorHandlerContext context, Record<?, ?> message, Exception exception) {
+    public Response handleError(ErrorHandlerContext context, Record<?, ?> message, Exception exception) {
         if (log.isWarnEnabled()) {
             log.warn(
                     "Exception caught for processorNodeId = {}, topic = {}, partition = {}, offset = {}, key = {}, value = {}",
@@ -42,11 +42,11 @@ public class ProcessorIdProcessingHandler implements ProcessingExceptionHandler 
                     exception);
         }
 
-        if (context.processorNodeId().equals("MAP_PROCESSOR")) return ProcessingHandlerResponse.FAIL;
-        if (context.processorNodeId().equals("FILTER_PROCESSOR")) return ProcessingHandlerResponse.CONTINUE;
-        if (context.processorNodeId().equals("SELECT_KEY_PROCESSOR")) return ProcessingHandlerResponse.FAIL;
+        if (context.processorNodeId().equals("MAP_PROCESSOR")) return Response.fail();
+        if (context.processorNodeId().equals("FILTER_PROCESSOR")) return Response.resume();
+        if (context.processorNodeId().equals("SELECT_KEY_PROCESSOR")) return Response.fail();
 
-        return ProcessingHandlerResponse.CONTINUE;
+        return Response.resume();
     }
 
     @Override

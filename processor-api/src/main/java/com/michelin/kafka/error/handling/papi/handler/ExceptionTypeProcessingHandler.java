@@ -32,7 +32,7 @@ public class ExceptionTypeProcessingHandler implements ProcessingExceptionHandle
     private static final Logger log = LoggerFactory.getLogger(ExceptionTypeProcessingHandler.class);
 
     @Override
-    public ProcessingHandlerResponse handle(ErrorHandlerContext context, Record<?, ?> message, Exception exception) {
+    public Response handleError(ErrorHandlerContext context, Record<?, ?> message, Exception exception) {
         if (log.isWarnEnabled()) {
             log.warn(
                     "Exception caught for processorNodeId = {}, topic = {}, partition = {}, offset = {}, key = {}, value = {}",
@@ -45,11 +45,11 @@ public class ExceptionTypeProcessingHandler implements ProcessingExceptionHandle
                     exception);
         }
 
-        if (exception instanceof JsonSyntaxException) return ProcessingHandlerResponse.FAIL;
-        if (exception instanceof InvalidDeliveryException) return ProcessingHandlerResponse.CONTINUE;
-        if (exception instanceof NetworkException) return ProcessingHandlerResponse.FAIL;
+        if (exception instanceof JsonSyntaxException) return Response.fail();
+        if (exception instanceof InvalidDeliveryException) return Response.resume();
+        if (exception instanceof NetworkException) return Response.fail();
 
-        return ProcessingHandlerResponse.CONTINUE;
+        return Response.resume();
     }
 
     @Override
