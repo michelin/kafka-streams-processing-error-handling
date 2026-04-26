@@ -58,11 +58,11 @@ public class CustomProcessor extends ContextualProcessor<String, DeliveryBooked,
 
     @Override
     public void process(Record<String, DeliveryBooked> message) {
-        if (message.value().getNumberOfTires() < 0) {
+        if (message.value().numberOfTires() < 0) {
             throw new InvalidDeliveryException("Number of tires cannot be negative");
         }
 
-        if (message.value().getNumberOfTires() >= 10) {
+        if (message.value().numberOfTires() >= 10) {
             context().forward(message.withValue(parseToJson(message.value())));
         }
     }

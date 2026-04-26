@@ -61,11 +61,11 @@ public class KafkaStreamsApp {
         streamsBuilder.stream("delivery_booked_topic", Consumed.with(Serdes.String(), Serdes.String()))
                 .mapValues(KafkaStreamsApp::parseFromJson) // JsonSyntaxException
                 .filter((_, value) -> {
-                    if (value.getNumberOfTires() < 0) {
+                    if (value.numberOfTires() < 0) {
                         throw new InvalidDeliveryException("Number of tires cannot be negative");
                     }
 
-                    return value.getNumberOfTires() >= 10;
+                    return value.numberOfTires() >= 10;
                 }) // InvalidDeliveryException or NullPointerException
                 .mapValues(KafkaStreamsApp::parseToJson)
                 .to("filtered_delivery_booked_dsl_topic", Produced.with(Serdes.String(), Serdes.String()));

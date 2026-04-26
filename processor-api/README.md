@@ -32,35 +32,14 @@ This will start the following services in Docker:
 
 ## Try It Out
 
-Using Control Center at http://localhost:9021, you can produce `DeliveryBooked` events to the `delivery_booked_topic` topic.
+Using the [Kafkagen](https://github.com/michelin/kafkagen) `produce` command, you can produce `DeliveryBooked` events to the `delivery_booked_topic` topic.
 
-### Example Record
-
-Key:
-
-```json
-"DEL12345"
+```bash
+kafkagen produce -f ../.kafkagen/default-record.json
 ```
-
-Value:
-
-```json
-{
-  "deliveryId": "DEL12345",
-  "truckId": "TRK56789",
-  "numberOfTires": 18,
-  "destination": "Bordeaux"
-}
-```
-
-### Triggering an Exception
 
 To trigger the processing exception handler, produce a record with a missing `numberOfTires` field. This will result in a `NullPointerException`:
 
-```json
-{
-  "deliveryId": "DEL12345",
-  "truckId": "TRK56789",
-  "destination": "Bordeaux"
-}
+```bash
+kafkagen produce -f ../.kafkagen/processing-error-record.json
 ```

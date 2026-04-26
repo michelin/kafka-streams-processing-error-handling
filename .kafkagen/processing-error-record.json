@@ -1,0 +1,11 @@
+[
+  {
+    "topic": "delivery_booked_topic",
+    "key": "DEL12345",
+    "value": {
+      "deliveryId": "DEL12345",
+      "truckId": "TRK56789",
+      "destination": "Bordeaux"
+    }
+  }
+]
