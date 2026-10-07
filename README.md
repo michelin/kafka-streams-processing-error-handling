@@ -1,5 +1,7 @@
 <div align="center">
 
+This project is a code sample accompanying the [Michelin IT Blog article on Kafka Streams processing error handling](https://blogit.michelin.io/processing-error-handling-in-kafka-streams). It is valid at least up to Apache Kafka 4.3.1, but will no longer evolve.
+
 <img src=".readme/logo.png" alt="Apache Kafka"/>
 
 # Processing Error Handling
